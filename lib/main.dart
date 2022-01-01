@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:app/screens/common/base_page.dart';
-import 'package:app/util/theme/app_theme.dart';
+import 'package:app/view/util/theme/app_theme.dart';
+import 'package:app/view/common/base_page.dart';
 
 void main() {
   runApp(const WenApp());

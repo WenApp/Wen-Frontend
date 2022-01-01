@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/util/theme/app_colors.dart';
+import 'package:app/view/util/theme/app_colors.dart';
 
 class AppTheme {
   static final ThemeData primaryTheme = ThemeData(
@@ -21,8 +21,6 @@ class AppTheme {
     primaryColor: AppColors.RasinBlack[900],
     dividerColor: AppColors.RasinBlack[700],
     backgroundColor: AppColors.RasinBlack[900],
-    appBarTheme: AppBarTheme(
-      color: AppColors.RasinBlack[900]
-    ),
+    appBarTheme: AppBarTheme(color: AppColors.RasinBlack[900]),
   );
 }

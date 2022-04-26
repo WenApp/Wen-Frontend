@@ -22,26 +22,6 @@ class AddAlarmViewManager {
   final List<Condition> conditions;
 
   AddAlarmViewManager(this.body, this.conditionCards, this.conditions);
-
-  // void initBody() {
-  //   body?.add(const SearchToken());
-  //   body?.add(const AddCondition());
-  // }
-
-  // void populateBody(List<Condition> conditions) {
-  //   conditionCards?.clear();
-  //   for (int i = 0; i < conditions.length; i++) {
-  //     conditionCards?.add(ConditionCard());
-  //   }
-  //   for (int i = 1; i <= conditions.length - 1; i++) {
-  //     body.insert(i, _conditionCards.elementAt(i - 1));
-  //   }
-  // }
-
-  // AddAlarmViewManager update() {
-  //   return AddAlarmViewManager(
-  //       body: body, conditionCards: conditionCards, conditions: conditions);
-  // }
 }
 
 abstract class AddAlarmViewManagerEvent {}

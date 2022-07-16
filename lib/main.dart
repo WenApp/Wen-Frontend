@@ -1,11 +1,9 @@
-import 'package:app/presentation/bloc/add_condition_bloc.dart';
-import 'package:app/presentation/bloc/set_alarm_bloc.dart';
-import 'package:app/view/add_alarm_view.dart';
-import 'package:app/view/alarm_view.dart';
+import 'package:app/view/util/navigation_controller/navigation_controller.dart';
+import 'package:app/view/views.dart';
+import 'package:app/view/widgets/app_nav_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:app/view/util/theme/app_theme.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:provider/provider.dart';
 
 import 'data/model/alarm.dart';
 
@@ -14,11 +12,23 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(AlarmAdapter());
   await Hive.openBox<Alarm>('user_alarms');
-  runApp(const WenApp());
+  runApp(MultiProvider(
+    providers: [
+      ListenableProvider<NavigationController>(
+        create: (context) => NavigationController(),
+      ),
+      ListenableProvider<AppNavBarButtonController>(
+        create: (context) => AppNavBarButtonController(),
+      )
+    ],
+    child: const WenApp(),
+  ));
 }
 
 class WenApp extends StatefulWidget {
-  const WenApp({Key? key}) : super(key: key);
+  const WenApp({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _WenApp createState() => _WenApp();
@@ -26,16 +36,28 @@ class WenApp extends StatefulWidget {
 
 class _WenApp extends State<WenApp> {
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      child: MaterialApp(home: const AlarmView(), theme: AppTheme.primaryTheme),
-      providers: [
-        BlocProvider(create: (context) => AlarmBloc(0)),
-        BlocProvider(create: (context) => AddConditionCubit([])),
-        BlocProvider(
-            create: (context) =>
-                AddAlarmViewManagerBloc(AddAlarmViewManager([], [], [])))
-      ],
-    );
+    NavigationController navigation =
+        Provider.of<NavigationController>(context);
+    return MaterialApp(
+        home: Navigator(
+            pages: [
+          if (navigation.screen == '/alarms')
+            const MaterialPage(child: BaseView(body: AlarmView())),
+          if (navigation.screen == '/notifications')
+            const MaterialPage(child: BaseView(body: NotificationsView())),
+          if (navigation.screen == '/settings')
+            const MaterialPage(child: BaseView(body: SettingsView())),
+          if (navigation.screen == '/add_alarm')
+            const MaterialPage(child: BaseOverlayView(body: AddAlarmView()))
+        ],
+            onPopPage: (route, result) {
+              return route.didPop(result);
+            }));
   }
 }

@@ -13,8 +13,30 @@ class _NotificationsView extends State<NotificationsView> {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
-          PremiumContainer(headline: "Wen Lambo!"),
+        children: [
+          const PremiumItemContainer(headline: "Wen Lambo!"),
+          const Spacer(flex: 1),
+          Flexible(
+            flex: 20,
+            child: ListView.builder(
+              itemCount: 10,
+              itemBuilder: (BuildContext context, int index) {
+                return UnconstrainedBox(
+                  constrainedAxis: Axis.vertical,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).size.height * 0.01),
+                    child: AppItemContainer(
+                      onTap: () {},
+                      child: Row(
+                        children: [Container()],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          )
         ],
       ),
     );

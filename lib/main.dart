@@ -1,17 +1,20 @@
+import 'package:app/view/test_view.dart';
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:app/view/views.dart';
 import 'package:app/view/widgets/app_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:app/view/util/size/app_size.dart';
 
 import 'data/model/alarm.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
-  Hive.registerAdapter(AlarmAdapter());
-  await Hive.openBox<Alarm>('user_alarms');
+  //await Hive.initFlutter();
+  //Hive.registerAdapter(AlarmAdapter());
+  //await Hive.openBox<Alarm>('user_alarms');
+
   runApp(MultiProvider(
     providers: [
       ListenableProvider<NavigationController>(
@@ -19,7 +22,7 @@ Future<void> main() async {
       ),
       ListenableProvider<AppNavBarButtonController>(
         create: (context) => AppNavBarButtonController(),
-      )
+      ),
     ],
     child: const WenApp(),
   ));
@@ -45,8 +48,8 @@ class _WenApp extends State<WenApp> {
     NavigationController navigation =
         Provider.of<NavigationController>(context);
     return MaterialApp(
-        home: Navigator(
-            pages: [
+      home: Navigator(
+        pages: [
           if (navigation.screen == '/alarms')
             const MaterialPage(child: BaseView(body: AlarmView())),
           if (navigation.screen == '/notifications')
@@ -54,10 +57,18 @@ class _WenApp extends State<WenApp> {
           if (navigation.screen == '/settings')
             const MaterialPage(child: BaseView(body: SettingsView())),
           if (navigation.screen == '/add_alarm')
-            const MaterialPage(child: BaseOverlayView(body: AddAlarmView()))
+            const MaterialPage(
+                child: BaseOverlayView(body: AddAlarmView(edit: false))),
+          if (navigation.screen == '/edit_alarm')
+            const MaterialPage(
+                child: BaseOverlayView(body: AddAlarmView(edit: true))),
+          if (navigation.screen == '/test')
+            const MaterialPage(child: BaseView(body: TestView()))
         ],
-            onPopPage: (route, result) {
-              return route.didPop(result);
-            }));
+        onPopPage: (route, result) {
+          return route.didPop(result);
+        },
+      ),
+    );
   }
 }

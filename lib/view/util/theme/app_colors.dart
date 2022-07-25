@@ -31,6 +31,9 @@ class AppColors {
   static MaterialColor Jet = const MaterialColor(
       0xFF313131, <int, Color>{500: Color(0xFF313131), 200: Color(0xFF99989B)});
 
+  static MaterialColor SpanishGrey =
+      const MaterialColor(0xFF99989B, <int, Color>{500: Color(0xFF99989B)});
+
   static MaterialColor EerieBlack =
       const MaterialColor(0xFF1D1D1D, <int, Color>{500: Color(0xFF1D1D1D)});
 }

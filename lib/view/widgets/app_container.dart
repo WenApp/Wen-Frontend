@@ -1,38 +1,98 @@
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:app/view/util/theme/app_colors.dart';
+import 'package:app/view/util/size/app_size.dart';
+import 'package:app/view/widgets/candle.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+
+class AppContainerConstants {
+  static const double kWidthSF = 0.8;
+}
 
 class AppContainer extends StatelessWidget {
   final double height;
   final BorderRadius? borderRadius;
+  final List<BoxShadow>? boxShadow;
+  final BoxBorder? border;
+  final EdgeInsets? padding;
+  final Color? color;
   final Widget child;
-  const AppContainer(
-      {Key? key, required this.height, required this.child, this.borderRadius})
-      : super(key: key);
+  const AppContainer({
+    Key? key,
+    required this.height,
+    required this.child,
+    this.color,
+    this.padding,
+    this.borderRadius,
+    this.boxShadow,
+    this.border,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: padding,
       decoration: BoxDecoration(
-        color: AppColors.Jet,
+        color: color ?? AppColors.Jet,
         borderRadius: borderRadius,
+        boxShadow: boxShadow,
+        border: border,
       ),
-      width: MediaQuery.of(context).size.width * 0.85,
+      width: MediaQuery.of(context).size.width * AppContainerConstants.kWidthSF,
       height: height,
       child: child,
     );
   }
 }
 
-class PremiumContainer extends StatefulWidget {
-  final String headline;
-  const PremiumContainer({Key? key, required this.headline}) : super(key: key);
+class AppItemContainer extends StatefulWidget {
+  final Widget child;
+  final Color? color;
+  final EdgeInsets? padding;
+  final BoxBorder? border;
+  final Function()? onTap;
+  const AppItemContainer(
+      {Key? key,
+      required this.child,
+      this.color,
+      this.padding,
+      this.onTap,
+      this.border})
+      : super(key: key);
+
   @override
-  _PremiumContainer createState() => _PremiumContainer();
+  _AppItemContainer createState() => _AppItemContainer();
 }
 
-class _PremiumContainer extends State<PremiumContainer> {
+class _AppItemContainer extends State<AppItemContainer> {
+  final double _borderRadius = 10.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: widget.onTap,
+      child: AppContainer(
+        color: widget.color,
+        height: MediaQuery.of(context).size.height * 0.075,
+        padding: widget.padding,
+        border: widget.border,
+        borderRadius: BorderRadius.all(Radius.circular(_borderRadius)),
+        child: widget.child,
+      ),
+    );
+  }
+}
+
+class PremiumItemContainer extends StatefulWidget {
+  final String headline;
+  const PremiumItemContainer({Key? key, required this.headline})
+      : super(key: key);
+  @override
+  _PremiumItemContainer createState() => _PremiumItemContainer();
+}
+
+class _PremiumItemContainer extends State<PremiumItemContainer> {
+  final double _borderRadius = 2.0;
   double _height = 0.0;
 
   @override
@@ -42,7 +102,15 @@ class _PremiumContainer extends State<PremiumContainer> {
     _height = MediaQuery.of(context).size.height * 0.04;
     return AppContainer(
       height: _height,
-      borderRadius: const BorderRadius.all(Radius.circular(2.0)),
+      borderRadius: BorderRadius.all(Radius.circular(_borderRadius)),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black12,
+          offset: Offset.fromDirection(-80.0, 2.0),
+          blurRadius: 2,
+          spreadRadius: 4,
+        ),
+      ],
       child: InkWell(
         onTap: () {
           //TODO: plan business model and implement premium popup or premium page
@@ -80,26 +148,62 @@ class _PremiumContainer extends State<PremiumContainer> {
   }
 }
 
-class AlarmViewContainer extends StatefulWidget {
-  const AlarmViewContainer({Key? key}) : super(key: key);
+class AlarmViewItemContainer extends StatefulWidget {
+  final Color? candleColor;
+  final int? index;
+  final bool isStatic;
+  const AlarmViewItemContainer({
+    Key? key,
+    required this.isStatic,
+    this.index,
+    this.candleColor,
+  }) : super(key: key);
   @override
-  _AlarmViewContainer createState() => _AlarmViewContainer();
+  _AlarmViewItemContainer createState() => _AlarmViewItemContainer();
 }
 
-class _AlarmViewContainer extends State<AlarmViewContainer> {
+class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
+  final double _borderRadius = 10.0;
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        //TODO: route to edit alarm view page
-      },
-      child: Ink(
-        child: AppContainer(
-          height: MediaQuery.of(context).size.height * 0.125,
-          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-          child: Column(children: [Row(), Row()]),
+    double _height = MediaQuery.of(context).size.height * 0.1;
+    double padding = _height * 0.01;
+    return Column(
+      children: [
+        Stack(
+          clipBehavior: Clip.none,
+          alignment: Alignment.centerLeft,
+          children: [
+            InkWell(
+              onTap: () {
+                //TODO: route to edit alarm view page
+                debugPrint('AlarmViewContainer Pressed');
+              },
+              child: Ink(
+                child: Padding(
+                  padding: EdgeInsets.only(top: padding, bottom: padding),
+                  child: AppContainer(
+                    height: _height,
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(_borderRadius)),
+                    child: Column(children: [Row(), Row()]),
+                  ),
+                ),
+              ),
+            ),
+            Candle(
+              color: widget.candleColor ?? AppColors.SpanishGrey,
+              height: _height,
+              width: MediaQuery.of(context).size.width *
+                  AppContainerConstants.kWidthSF,
+            ),
+          ],
         ),
-      ),
+        Divider(
+          height: _height * 0.1,
+        )
+      ],
     );
   }
 }

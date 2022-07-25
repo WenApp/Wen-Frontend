@@ -1,8 +1,7 @@
+import 'package:flutter/material.dart';
+
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:app/view/util/theme/app_colors.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
 class AppNavBarButtonController extends ChangeNotifier {
@@ -77,12 +76,28 @@ class _AppNavBar extends State<AppNavBar> {
       icon: Icon(Icons.settings),
       index: 2,
       screen: '/settings',
+    ),
+    const AppNavBarButton(
+      icon: Icon(Icons.abc),
+      index: 3,
+      screen: '/test',
     )
   ];
 
   @override
   Widget build(BuildContext context) {
-    return BottomAppBar(
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.EerieBlack,
+            spreadRadius: 60.0,
+            blurRadius: 35.0,
+          )
+        ],
+      ),
+      child: BottomAppBar(
+        elevation: 0.0,
         color: AppColors.EerieBlack,
         child: Padding(
           padding:
@@ -91,6 +106,8 @@ class _AppNavBar extends State<AppNavBar> {
             height: MediaQuery.of(context).size.height * 0.1,
             child: Row(children: [...items]),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

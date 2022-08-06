@@ -26,7 +26,7 @@ class Candle extends StatelessWidget {
       children: [
         //canle body
         Container(
-          height: height * 1.25,
+          height: height * 1.1,
           width: width * 0.1,
           decoration: BoxDecoration(
             color: color,
@@ -35,7 +35,7 @@ class Candle extends StatelessWidget {
         ),
         // candle tail
         Container(
-          height: height * 1.5,
+          height: height * 1.25,
           width: width * 0.005,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50.0),

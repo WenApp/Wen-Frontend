@@ -1,10 +1,14 @@
+import 'package:app/constants/alarm_attributes.dart';
+import 'package:app/presentation/providers/alarm_provider.dart';
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:app/view/util/theme/app_colors.dart';
 import 'package:app/view/util/size/app_size.dart';
 import 'package:app/view/widgets/candle.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:app/data/model/alarm_attribute.dart';
 
 class AppContainerConstants {
   static const double kWidthSF = 0.8;
@@ -152,11 +156,13 @@ class AlarmViewItemContainer extends StatefulWidget {
   final Color? candleColor;
   final int? index;
   final bool isStatic;
+  final AlarmAttribute? data;
   const AlarmViewItemContainer({
     Key? key,
     required this.isStatic,
     this.index,
     this.candleColor,
+    this.data,
   }) : super(key: key);
   @override
   _AlarmViewItemContainer createState() => _AlarmViewItemContainer();
@@ -169,6 +175,10 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height * 0.1;
     double padding = _height * 0.01;
+    NavigationController navigation =
+        Provider.of<NavigationController>(context);
+    AlarmAttributeProvider pAlarmAttribute =
+        Provider.of<AlarmAttributeProvider>(context);
     return Column(
       children: [
         Stack(
@@ -177,8 +187,7 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
           children: [
             InkWell(
               onTap: () {
-                //TODO: route to edit alarm view page
-                debugPrint('AlarmViewContainer Pressed');
+                onEdit(navigation, pAlarmAttribute);
               },
               child: Ink(
                 child: Padding(
@@ -187,7 +196,45 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
                     height: _height,
                     borderRadius:
                         BorderRadius.all(Radius.circular(_borderRadius)),
-                    child: Column(children: [Row(), Row()]),
+                    child: Row(children: [
+                      const Spacer(flex: 2),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(widget.data?.coin ?? '',
+                              style: GoogleFonts.bungee(
+                                  fontSize: 24, color: Colors.white)),
+                          Text(widget.data?.targetPrice ?? '',
+                              style: GoogleFonts.quantico(
+                                  fontSize: 16, color: AppColors.SpanishGrey)),
+                        ],
+                      ),
+                      const Spacer(flex: 1),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.data?.operatorType.type == Operator.less
+                                ? '<='
+                                : '>=',
+                            style: GoogleFonts.quantico(
+                                fontSize: 20, color: AppColors.AmberSAE),
+                          ),
+                        ],
+                      ),
+                      const Spacer(flex: 1),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.data?.targetPrice ?? '',
+                            style: GoogleFonts.quantico(
+                                fontSize: 16, color: AppColors.SpanishGrey),
+                          ),
+                        ],
+                      ),
+                      const Spacer(flex: 1),
+                    ]),
                   ),
                 ),
               ),
@@ -205,5 +252,24 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
         )
       ],
     );
+  }
+
+  void onEdit(
+      NavigationController navigation, AlarmAttributeProvider pAlarmAttribute) {
+    if (!widget.isStatic) {
+      pAlarmAttribute.updateFromLocalStorage(
+        widget.data ??
+            AlarmAttribute(
+              coin: '',
+              currency: '',
+              targetPrice: '',
+              indicatorType: IndicatorType(type: Indicator.price),
+              operatorType: OperatorType(type: Operator.greater),
+              notificationType: AlertType(type: Alert.alarm),
+            ),
+      );
+      pAlarmAttribute.updateSelectedIndex(widget.index ?? 0);
+      navigation.changeScreen('/edit_alarm');
+    }
   }
 }

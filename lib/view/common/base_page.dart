@@ -41,6 +41,7 @@ class _BaseView extends State<BaseView> {
       backgroundColor: AppColors.EerieBlack,
       body: SafeArea(
         child: widget.body,
+        top: true,
         minimum: EdgeInsets.only(
           top: MediaQuery.of(context).size.height * 0.1,
         ),

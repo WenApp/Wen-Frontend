@@ -1,3 +1,5 @@
+import 'package:app/constants/alarm_attributes.dart';
+import 'package:app/presentation/providers/alarm_provider.dart';
 import 'package:app/view/test_view.dart';
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:app/view/views.dart';
@@ -7,13 +9,22 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:app/view/util/size/app_size.dart';
 
-import 'data/model/alarm.dart';
+import 'data/model/alarm_attribute.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //await Hive.initFlutter();
-  //Hive.registerAdapter(AlarmAdapter());
-  //await Hive.openBox<Alarm>('user_alarms');
+
+  // Hive local storage
+  await Hive.initFlutter();
+  Hive.registerAdapter(IndicatorTypeAdapter());
+  Hive.registerAdapter(OperatorTypeAdapter());
+  Hive.registerAdapter(AlertTypeAdapter());
+  Hive.registerAdapter(AlarmAttributeAdapter());
+  Hive.registerAdapter(OperatorAdapter());
+  Hive.registerAdapter(IndicatorAdapter());
+  Hive.registerAdapter(AlertAdapter());
+  //await Hive.deleteBoxFromDisk('alarms');
+  await Hive.openBox<AlarmAttribute>('alarms');
 
   runApp(MultiProvider(
     providers: [
@@ -23,6 +34,9 @@ Future<void> main() async {
       ListenableProvider<AppNavBarButtonController>(
         create: (context) => AppNavBarButtonController(),
       ),
+      ListenableProvider<AlarmAttributeProvider>(
+        create: (context) => AlarmAttributeProvider(),
+      )
     ],
     child: const WenApp(),
   ));
@@ -41,6 +55,12 @@ class _WenApp extends State<WenApp> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    Hive.close();
+    super.dispose();
   }
 
   @override

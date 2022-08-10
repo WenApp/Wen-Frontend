@@ -1,61 +1,63 @@
+import 'package:app/view/util/navigation_controller/navigation_controller.dart';
+import 'package:app/view/util/theme/app_colors.dart';
 import 'package:app/view/widgets/app_container.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
-class SettingsView extends StatefulWidget {
-  const SettingsView({Key? key}) : super(key: key);
+class SettingsMenuView extends StatefulWidget {
+  const SettingsMenuView({Key? key}) : super(key: key);
   @override
-  _SettingsView createState() => _SettingsView();
+  _SettingsMenuView createState() => _SettingsMenuView();
 }
 
-class _SettingsView extends State<SettingsView> {
-  List<Function()> _onTapped = [];
+class _SettingsMenuView extends State<SettingsMenuView> {
   @override
   Widget build(BuildContext context) {
-    _onTapped = [
-      () {
-        debugPrint('1');
-      },
-      () {
-        debugPrint('2');
-      },
-      () {
-        debugPrint('3');
-      },
-      () {
-        debugPrint('4');
-      },
-      () {
-        debugPrint('5');
-      },
-    ];
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           const PremiumItemContainer(headline: "Wen Binance!"),
           const Spacer(flex: 1),
-          Flexible(
-            flex: 20,
-            child: ListView.builder(
-              itemCount: 5,
-              physics: const NeverScrollableScrollPhysics(),
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).size.height * 0.03),
-                  child: UnconstrainedBox(
-                    constrainedAxis: Axis.vertical,
-                    child: AppItemContainer(
-                      onTap: _onTapped[index],
-                      child: Row(
-                        children: [Container()],
-                      ),
-                    ),
-                  ),
-                );
-              },
+          settingOption('Settings', '/'),
+          const Spacer(flex: 1),
+          settingOption('About', '/'),
+          const Spacer(flex: 1),
+          settingOption('Send Feedback', '/'),
+          const Spacer(flex: 15),
+        ],
+      ),
+    );
+  }
+
+  Widget settingOption(String title, String route) {
+    return AppItemContainer(
+      onTap: () {
+        //navigationController.changeScreen(route);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Spacer(flex: 1),
+          Text(
+            title,
+            style: GoogleFonts.bungee(
+              fontSize: 24.0,
+              color: AppColors.SpanishGrey,
             ),
           ),
+          const Spacer(flex: 1),
+          Padding(
+            padding: EdgeInsets.only(
+              right: MediaQuery.of(context).size.width * 0.025,
+            ),
+            child: Icon(
+              Icons.arrow_forward_ios,
+              color: AppColors.AmberSAE.withOpacity(0.5),
+              size: 16.0,
+            ),
+          )
         ],
       ),
     );

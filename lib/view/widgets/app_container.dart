@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:app/view/util/theme/app_colors.dart';
 import 'package:app/view/util/size/app_size.dart';
 import 'package:app/view/widgets/candle.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -101,8 +102,6 @@ class _PremiumItemContainer extends State<PremiumItemContainer> {
 
   @override
   Widget build(BuildContext context) {
-    // NavigationController navigation =
-    //     Provider.of<NavigationController>(context);
     _height = MediaQuery.of(context).size.height * 0.04;
     return AppContainer(
       height: _height,
@@ -175,8 +174,6 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height * 0.1;
     double padding = _height * 0.01;
-    NavigationController navigation =
-        Provider.of<NavigationController>(context);
     AlarmAttributeProvider pAlarmAttribute =
         Provider.of<AlarmAttributeProvider>(context);
     return Column(
@@ -187,7 +184,7 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
           children: [
             InkWell(
               onTap: () {
-                onEdit(navigation, pAlarmAttribute);
+                onEdit(pAlarmAttribute);
               },
               child: Ink(
                 child: Padding(
@@ -254,8 +251,7 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
     );
   }
 
-  void onEdit(
-      NavigationController navigation, AlarmAttributeProvider pAlarmAttribute) {
+  void onEdit(AlarmAttributeProvider pAlarmAttribute) {
     if (!widget.isStatic) {
       pAlarmAttribute.updateFromLocalStorage(
         widget.data ??
@@ -269,7 +265,7 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
             ),
       );
       pAlarmAttribute.updateSelectedIndex(widget.index ?? 0);
-      navigation.changeScreen('/edit_alarm');
+      context.push('/edit_alarm');
     }
   }
 }

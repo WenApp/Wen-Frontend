@@ -7,7 +7,7 @@ import 'package:app/view/widgets/app_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:app/view/util/size/app_size.dart';
+import 'package:go_router/go_router.dart';
 
 import 'data/model/alarm_attribute.dart';
 
@@ -28,9 +28,6 @@ Future<void> main() async {
 
   runApp(MultiProvider(
     providers: [
-      ListenableProvider<NavigationController>(
-        create: (context) => NavigationController(),
-      ),
       ListenableProvider<AppNavBarButtonController>(
         create: (context) => AppNavBarButtonController(),
       ),
@@ -52,6 +49,39 @@ class WenApp extends StatefulWidget {
 }
 
 class _WenApp extends State<WenApp> {
+  final GoRouter _router = GoRouter(routes: <GoRoute>[
+    GoRoute(
+      path: '/',
+      builder: (context, state) {
+        return const BaseView(body: AlarmView());
+      },
+    ),
+    GoRoute(
+      path: '/notifications',
+      builder: ((context, state) {
+        return const BaseView(body: NotificationsView());
+      }),
+    ),
+    GoRoute(
+      path: '/settings_menu',
+      builder: ((context, state) {
+        return const BaseView(body: SettingsMenuView());
+      }),
+    ),
+    GoRoute(
+      path: '/add_alarm',
+      builder: ((context, state) {
+        return const BaseOverlayView(body: AddAlarmView(edit: false));
+      }),
+    ),
+    GoRoute(
+      path: '/edit_alarm',
+      builder: ((context, state) {
+        return const BaseOverlayView(body: AddAlarmView(edit: true));
+      }),
+    ),
+  ]);
+
   @override
   void initState() {
     super.initState();
@@ -65,30 +95,10 @@ class _WenApp extends State<WenApp> {
 
   @override
   Widget build(BuildContext context) {
-    NavigationController navigation =
-        Provider.of<NavigationController>(context);
-    return MaterialApp(
-      home: Navigator(
-        pages: [
-          if (navigation.screen == '/alarms')
-            const MaterialPage(child: BaseView(body: AlarmView())),
-          if (navigation.screen == '/notifications')
-            const MaterialPage(child: BaseView(body: NotificationsView())),
-          if (navigation.screen == '/settings')
-            const MaterialPage(child: BaseView(body: SettingsView())),
-          if (navigation.screen == '/add_alarm')
-            const MaterialPage(
-                child: BaseOverlayView(body: AddAlarmView(edit: false))),
-          if (navigation.screen == '/edit_alarm')
-            const MaterialPage(
-                child: BaseOverlayView(body: AddAlarmView(edit: true))),
-          if (navigation.screen == '/test')
-            const MaterialPage(child: BaseView(body: TestView()))
-        ],
-        onPopPage: (route, result) {
-          return route.didPop(result);
-        },
-      ),
+    return MaterialApp.router(
+      routerDelegate: _router.routerDelegate,
+      routeInformationParser: _router.routeInformationParser,
+      routeInformationProvider: _router.routeInformationProvider,
     );
   }
 }

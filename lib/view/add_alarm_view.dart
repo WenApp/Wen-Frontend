@@ -6,6 +6,7 @@ import 'package:app/view/widgets/app_bottom_sheet.dart';
 import 'package:app/view/widgets/app_container.dart';
 import 'package:app/view/util/theme/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:app/view/widgets/item_body.dart';
 import 'package:hive/hive.dart';
@@ -129,8 +130,6 @@ class _AddAlarmView extends State<AddAlarmView> {
   Widget save() {
     AlarmAttributeProvider pAlarmAttribute =
         Provider.of<AlarmAttributeProvider>(context, listen: true);
-    NavigationController navigation =
-        Provider.of<NavigationController>(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 5.0),
       child: AppItemContainer(
@@ -145,8 +144,12 @@ class _AddAlarmView extends State<AddAlarmView> {
             operatorType: pAlarmAttribute.operatorType,
             notificationType: pAlarmAttribute.alertType,
           );
-          await _box.add(alarmAttribute);
-          navigation.changeScreen('/alarms');
+          if (!widget.edit) {
+            await _box.add(alarmAttribute);
+          } else {
+            await _box.putAt(pAlarmAttribute.selectedIndex, alarmAttribute);
+          }
+          context.pop();
         },
         child: Center(
           child: Text(
@@ -162,8 +165,6 @@ class _AddAlarmView extends State<AddAlarmView> {
   Widget delete() {
     AlarmAttributeProvider pAlarmAttribute =
         Provider.of<AlarmAttributeProvider>(context, listen: true);
-    NavigationController navigation =
-        Provider.of<NavigationController>(context);
     return Padding(
       padding: const EdgeInsets.only(top: 5.0),
       child: AppItemContainer(
@@ -171,7 +172,7 @@ class _AddAlarmView extends State<AddAlarmView> {
         border: Border.all(color: AppColors.OrangeRedCrayola, width: 2.0),
         onTap: () async {
           await _box.deleteAt(pAlarmAttribute.selectedIndex);
-          navigation.changeScreen('/alarms');
+          context.pop();
         },
         child: Center(
           child: Text(

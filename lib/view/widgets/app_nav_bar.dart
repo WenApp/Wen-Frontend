@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:app/view/util/theme/app_colors.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class AppNavBarButtonController extends ChangeNotifier {
@@ -34,9 +35,6 @@ class _AppNavBarButton extends State<AppNavBarButton> {
 
   @override
   Widget build(BuildContext context) {
-    NavigationController navigation =
-        Provider.of<NavigationController>(context, listen: false);
-
     AppNavBarButtonController controller =
         Provider.of<AppNavBarButtonController>(context);
 
@@ -47,7 +45,7 @@ class _AppNavBarButton extends State<AppNavBarButton> {
       icon: widget.icon,
       onPressed: () {
         controller.setSelectedIndex(widget.index);
-        navigation.changeScreen(widget.screen);
+        context.go(widget.screen);
       },
     );
   }
@@ -65,7 +63,7 @@ class _AppNavBar extends State<AppNavBar> {
     const AppNavBarButton(
       icon: Icon(Icons.alarm),
       index: 0,
-      screen: '/alarms',
+      screen: '/',
     ),
     const AppNavBarButton(
       icon: Icon(Icons.notifications),
@@ -75,13 +73,8 @@ class _AppNavBar extends State<AppNavBar> {
     const AppNavBarButton(
       icon: Icon(Icons.settings),
       index: 2,
-      screen: '/settings',
+      screen: '/settings_menu',
     ),
-    const AppNavBarButton(
-      icon: Icon(Icons.abc),
-      index: 3,
-      screen: '/test',
-    )
   ];
 
   @override

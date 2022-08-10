@@ -2,6 +2,7 @@ import 'package:app/view/util/theme/app_colors.dart';
 import 'package:app/view/widgets/app_nav_bar.dart';
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class BaseView extends StatefulWidget {
@@ -19,15 +20,13 @@ class _BaseView extends State<BaseView> {
 
   @override
   Widget build(BuildContext context) {
-    NavigationController navigation =
-        Provider.of<NavigationController>(context);
     return Scaffold(
       bottomNavigationBar: const AppNavBar(),
       floatingActionButton: Offstage(
           offstage: false,
           child: FloatingActionButton(
             onPressed: () {
-              navigation.changeScreen('/add_alarm');
+              context.push('/add_alarm');
             },
             backgroundColor: AppColors.AmberSAE,
             shape: const RoundedRectangleBorder(
@@ -61,8 +60,6 @@ class BaseOverlayView extends StatefulWidget {
 class _BaseOverlayView extends State<BaseOverlayView> {
   @override
   Widget build(BuildContext context) {
-    NavigationController navigation =
-        Provider.of<NavigationController>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.EerieBlack,
@@ -71,7 +68,7 @@ class _BaseOverlayView extends State<BaseOverlayView> {
           IconButton(
               iconSize: 32.0,
               onPressed: () {
-                navigation.changeScreen('/alarms');
+                context.pop();
               },
               icon: Icon(
                 Icons.highlight_remove,

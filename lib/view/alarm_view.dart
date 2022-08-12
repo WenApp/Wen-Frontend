@@ -1,5 +1,4 @@
-import 'package:app/constants/alarm_attributes.dart';
-import 'package:app/data/model/alarm_attribute.dart';
+import 'package:app/data/model/alarm_data.dart';
 import 'package:app/view/widgets/app_container.dart';
 import 'package:app/view/util/theme/app_colors.dart';
 import 'package:app/view/util/size/app_size.dart';
@@ -29,9 +28,8 @@ class _AlarmView extends State<AlarmView> {
           Flexible(
             flex: 25,
             child: ValueListenableBuilder(
-              valueListenable: Hive.box<AlarmAttribute>('alarms').listenable(),
-              builder:
-                  (BuildContext context, Box<AlarmAttribute> box, Widget? _) {
+              valueListenable: Hive.box<AlarmData>('alarms').listenable(),
+              builder: (BuildContext context, Box<AlarmData> box, Widget? _) {
                 return ListView.builder(
                   itemCount: box.length,
                   physics: const BouncingScrollPhysics(),
@@ -41,8 +39,8 @@ class _AlarmView extends State<AlarmView> {
                       child: AlarmViewItemContainer(
                         isStatic: false,
                         index: index,
-                        candleColor: box.getAt(index)?.operatorType.type ==
-                                Operator.greater
+                        candleColor: box.getAt(index)?.condition?.type ==
+                                ConditionType.greater
                             ? AppColors.Malachite
                             : AppColors.OrangeRedCrayola,
                         data: box.getAt(index),

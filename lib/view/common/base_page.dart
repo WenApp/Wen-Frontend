@@ -62,6 +62,7 @@ class _BaseOverlayView extends State<BaseOverlayView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppColors.EerieBlack,
         elevation: 0.0,
         actions: [

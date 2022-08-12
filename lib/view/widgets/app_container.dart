@@ -1,5 +1,4 @@
-import 'package:app/constants/alarm_attributes.dart';
-import 'package:app/presentation/providers/alarm_provider.dart';
+import 'package:app/presentation/providers/alarm_data_provider.dart';
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:app/view/util/theme/app_colors.dart';
@@ -9,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:app/data/model/alarm_attribute.dart';
+import 'package:app/data/model/alarm_data.dart';
 
 class AppContainerConstants {
   static const double kWidthSF = 0.8;
@@ -155,7 +154,7 @@ class AlarmViewItemContainer extends StatefulWidget {
   final Color? candleColor;
   final int? index;
   final bool isStatic;
-  final AlarmAttribute? data;
+  final AlarmData? data;
   const AlarmViewItemContainer({
     Key? key,
     required this.isStatic,
@@ -174,8 +173,7 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.height * 0.1;
     double padding = _height * 0.01;
-    AlarmAttributeProvider pAlarmAttribute =
-        Provider.of<AlarmAttributeProvider>(context);
+    AlarmDataProvider pAlarmData = Provider.of<AlarmDataProvider>(context);
     return Column(
       children: [
         Stack(
@@ -184,7 +182,7 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
           children: [
             InkWell(
               onTap: () {
-                onEdit(pAlarmAttribute);
+                onEdit(pAlarmData);
               },
               child: Ink(
                 child: Padding(
@@ -211,7 +209,7 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            widget.data?.operatorType.type == Operator.less
+                            widget.data?.condition?.type == ConditionType.less
                                 ? '<='
                                 : '>=',
                             style: GoogleFonts.quantico(
@@ -251,20 +249,10 @@ class _AlarmViewItemContainer extends State<AlarmViewItemContainer> {
     );
   }
 
-  void onEdit(AlarmAttributeProvider pAlarmAttribute) {
+  void onEdit(AlarmDataProvider pAlarmData) {
     if (!widget.isStatic) {
-      pAlarmAttribute.updateFromLocalStorage(
-        widget.data ??
-            AlarmAttribute(
-              coin: '',
-              currency: '',
-              targetPrice: '',
-              indicatorType: IndicatorType(type: Indicator.price),
-              operatorType: OperatorType(type: Operator.greater),
-              notificationType: AlertType(type: Alert.alarm),
-            ),
-      );
-      pAlarmAttribute.updateSelectedIndex(widget.index ?? 0);
+      pAlarmData.updateFromLocalStorage(widget.data);
+      pAlarmData.updateSelectedIndex(widget.index ?? 0);
       context.push('/edit_alarm');
     }
   }

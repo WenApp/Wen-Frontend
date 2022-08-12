@@ -1,5 +1,4 @@
-import 'package:app/constants/alarm_attributes.dart';
-import 'package:app/presentation/providers/alarm_provider.dart';
+import 'package:app/presentation/providers/alarm_data_provider.dart';
 import 'package:app/view/test_view.dart';
 import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:app/view/views.dart';
@@ -9,7 +8,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 
-import 'data/model/alarm_attribute.dart';
+import 'data/model/alarm_data.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,22 +16,22 @@ Future<void> main() async {
   // Hive local storage
   await Hive.initFlutter();
   Hive.registerAdapter(IndicatorTypeAdapter());
-  Hive.registerAdapter(OperatorTypeAdapter());
+  Hive.registerAdapter(ConditionTypeAdapter());
   Hive.registerAdapter(AlertTypeAdapter());
-  Hive.registerAdapter(AlarmAttributeAdapter());
-  Hive.registerAdapter(OperatorAdapter());
+  Hive.registerAdapter(AlarmDataAdapter());
+  Hive.registerAdapter(ConditionAdapter());
   Hive.registerAdapter(IndicatorAdapter());
   Hive.registerAdapter(AlertAdapter());
   //await Hive.deleteBoxFromDisk('alarms');
-  await Hive.openBox<AlarmAttribute>('alarms');
+  await Hive.openBox<AlarmData>('alarms');
 
   runApp(MultiProvider(
     providers: [
       ListenableProvider<AppNavBarButtonController>(
         create: (context) => AppNavBarButtonController(),
       ),
-      ListenableProvider<AlarmAttributeProvider>(
-        create: (context) => AlarmAttributeProvider(),
+      ListenableProvider<AlarmDataProvider>(
+        create: (context) => AlarmDataProvider(),
       )
     ],
     child: const WenApp(),

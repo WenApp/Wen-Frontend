@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:app/constants/alarm_attributes.dart';
-import 'package:app/presentation/providers/alarm_provider.dart';
+import 'package:app/data/model/alarm_data.dart';
+import 'package:app/presentation/providers/alarm_data_provider.dart';
 import 'package:app/view/widgets/app_container.dart';
 import 'package:app/view/widgets/app_dropdown_button.dart';
 import 'package:app/view/widgets/item_body.dart';
@@ -79,8 +79,7 @@ class _SearchBottomSheet extends State<SearchBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
-    AlarmAttributeProvider pAlarmAttribute =
-        Provider.of<AlarmAttributeProvider>(context);
+    AlarmDataProvider pAlarmData = Provider.of<AlarmDataProvider>(context);
     return AppBottomSheet(
       body: Column(
         children: [
@@ -113,7 +112,7 @@ class _SearchBottomSheet extends State<SearchBottomSheet> {
             onSubmitted: ((value) {
               for (String item in _items) {
                 if (value.toLowerCase() == item.toLowerCase()) {
-                  pAlarmAttribute.updateSelectedCoin(value);
+                  pAlarmData.updateSelectedCoin(value);
                 }
               }
             }),
@@ -142,7 +141,7 @@ class _SearchBottomSheet extends State<SearchBottomSheet> {
                       ),
                       textColor: AppColors.SpanishGrey,
                       onTap: (() {
-                        onFilterItemSelect(index, pAlarmAttribute, snapshot);
+                        onFilterItemSelect(index, pAlarmData, snapshot);
                       }),
                     );
                   },
@@ -167,16 +166,13 @@ class _SearchBottomSheet extends State<SearchBottomSheet> {
     _streamController.add(filteredItems);
   }
 
-  void onFilterItemSelect(int index, AlarmAttributeProvider pAlarmAttribute,
+  void onFilterItemSelect(int index, AlarmDataProvider pAlarmData,
       AsyncSnapshot<List<String>> snapshot) {
     _textController.text = snapshot.data![index];
-    pAlarmAttribute.updateSelectedCoin(_textController.text);
+    pAlarmData.updateSelectedCoin(_textController.text);
   }
 }
 
-//TODO:
-//modify the selection process by using a dropdown list instead of a button
-//allows for further customisability
 class ItemBottomSheet extends StatefulWidget {
   final String itemType;
   const ItemBottomSheet({Key? key, required this.itemType}) : super(key: key);
@@ -195,12 +191,12 @@ class _ItemBottomSheet extends State<ItemBottomSheet> {
           const Spacer(flex: 1),
           if (widget.itemType == 'indicator')
             chooseIndicatorSheet()
-          else if (widget.itemType == 'operator')
-            chooseOperatorSheet()
+          else if (widget.itemType == 'condition')
+            chooseConditionSheet()
           else if (widget.itemType == 'value')
             chooseValueSheet()
-          else if (widget.itemType == 'notification')
-            chooseNotificationSheet()
+          else if (widget.itemType == 'alert')
+            chooseAlertSheet()
           else
             Container(),
           const Spacer(flex: 1)
@@ -219,17 +215,17 @@ class _ItemBottomSheet extends State<ItemBottomSheet> {
   }
 
   Widget chooseIndicatorSheet() {
-    AlarmAttributeProvider pAlarmAttribute =
-        Provider.of<AlarmAttributeProvider>(context, listen: true);
+    AlarmDataProvider pAlarmData =
+        Provider.of<AlarmDataProvider>(context, listen: true);
     return itemSheet(children: [
       const Spacer(flex: 3),
       AppDropdownButton(
-        value: pAlarmAttribute.indicator.type.name,
+        value: pAlarmData.currAlarmData.indicator?.type?.name,
         onChanged: (value) {
           switch (value) {
             case 'price':
-              pAlarmAttribute.updateSelectedIndicator(
-                  IndicatorType(type: Indicator.price));
+              pAlarmData.updateSelectedIndicator(
+                  Indicator(type: IndicatorType.price));
               break;
           }
         },
@@ -256,22 +252,22 @@ class _ItemBottomSheet extends State<ItemBottomSheet> {
     ]);
   }
 
-  Widget chooseOperatorSheet() {
-    AlarmAttributeProvider pAlarmAttribute =
-        Provider.of<AlarmAttributeProvider>(context, listen: true);
+  Widget chooseConditionSheet() {
+    AlarmDataProvider pAlarmData =
+        Provider.of<AlarmDataProvider>(context, listen: true);
     return itemSheet(children: [
       const Spacer(flex: 1),
       AppDropdownButton(
-        value: pAlarmAttribute.operatorType.type.name,
+        value: pAlarmData.currAlarmData.condition?.type?.name,
         onChanged: (value) {
           switch (value) {
             case 'greater':
-              pAlarmAttribute
-                  .updateSelectedOperator(OperatorType(type: Operator.greater));
+              pAlarmData.updateSelectedOperator(
+                  Condition(type: ConditionType.greater));
               break;
             case 'less':
-              pAlarmAttribute
-                  .updateSelectedOperator(OperatorType(type: Operator.less));
+              pAlarmData
+                  .updateSelectedOperator(Condition(type: ConditionType.less));
               break;
           }
         },
@@ -303,8 +299,8 @@ class _ItemBottomSheet extends State<ItemBottomSheet> {
   }
 
   Widget chooseValueSheet() {
-    AlarmAttributeProvider pAlarmAttribute =
-        Provider.of<AlarmAttributeProvider>(context, listen: true);
+    AlarmDataProvider pAlarmData =
+        Provider.of<AlarmDataProvider>(context, listen: true);
     return itemSheet(children: [
       TextField(
         keyboardType: TextInputType.number,
@@ -318,28 +314,26 @@ class _ItemBottomSheet extends State<ItemBottomSheet> {
           border: InputBorder.none,
         ),
         onSubmitted: ((value) {
-          if (value.isNotEmpty) pAlarmAttribute.updateValue(value);
+          if (value.isNotEmpty) pAlarmData.updateValue(value);
         }),
       )
     ]);
   }
 
-  Widget chooseNotificationSheet() {
-    AlarmAttributeProvider pAlarmAttribute =
-        Provider.of<AlarmAttributeProvider>(context, listen: true);
+  Widget chooseAlertSheet() {
+    AlarmDataProvider pAlarmData =
+        Provider.of<AlarmDataProvider>(context, listen: true);
     return itemSheet(children: [
       const Spacer(flex: 1),
       AppDropdownButton(
-        value: pAlarmAttribute.alertType.type.name,
+        value: pAlarmData.currAlarmData.alert?.type?.name,
         onChanged: (value) {
           switch (value) {
             case 'alarm':
-              pAlarmAttribute
-                  .updateSelectedAlertType(AlertType(type: Alert.alarm));
+              pAlarmData.updateSelectedAlertType(Alert(type: AlertType.alarm));
               break;
             case 'notify':
-              pAlarmAttribute
-                  .updateSelectedAlertType(AlertType(type: Alert.notify));
+              pAlarmData.updateSelectedAlertType(Alert(type: AlertType.notify));
               break;
           }
         },

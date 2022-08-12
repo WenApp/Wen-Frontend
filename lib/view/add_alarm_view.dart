@@ -1,15 +1,15 @@
+import 'package:app/data/model/alarm_data.dart';
 import 'package:app/presentation/providers/alarm_data_provider.dart';
-import 'package:app/view/widgets/app_container.dart';
 import 'package:app/view/util/theme/app_colors.dart';
+import 'package:app/view/widgets/item_body.dart';
+import 'package:app/view/widgets/app_container.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:app/view/widgets/item_body.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:app/data/model/alarm_data.dart';
-import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AddAlarmView extends StatefulWidget {
   final bool edit;

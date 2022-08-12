@@ -1,8 +1,7 @@
+import 'package:app/view/util/theme/app_colors.dart';
 import 'package:app/view/widgets/app_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../util/theme/app_colors.dart';
 
 abstract class ItemBody {
   void showBottomSheet(BuildContext context);

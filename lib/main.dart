@@ -1,14 +1,11 @@
+import 'package:app/data/model/alarm_data.dart';
 import 'package:app/presentation/providers/alarm_data_provider.dart';
-import 'package:app/view/test_view.dart';
-import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:app/view/views.dart';
 import 'package:app/view/widgets/app_nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
-
-import 'data/model/alarm_data.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,18 +21,23 @@ Future<void> main() async {
   Hive.registerAdapter(AlertAdapter());
   //await Hive.deleteBoxFromDisk('alarms');
   await Hive.openBox<AlarmData>('alarms');
+  //
 
-  runApp(MultiProvider(
-    providers: [
-      ListenableProvider<AppNavBarButtonController>(
-        create: (context) => AppNavBarButtonController(),
-      ),
-      ListenableProvider<AlarmDataProvider>(
-        create: (context) => AlarmDataProvider(),
-      )
-    ],
-    child: const WenApp(),
-  ));
+  // App runner
+  runApp(
+    MultiProvider(
+      providers: [
+        ListenableProvider<AppNavBarButtonController>(
+          create: (context) => AppNavBarButtonController(),
+        ),
+        ListenableProvider<AlarmDataProvider>(
+          create: (context) => AlarmDataProvider(),
+        )
+      ],
+      child: const WenApp(),
+    ),
+  );
+  //
 }
 
 class WenApp extends StatefulWidget {

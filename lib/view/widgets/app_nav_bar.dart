@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-
-import 'package:app/view/util/navigation_controller/navigation_controller.dart';
 import 'package:app/view/util/theme/app_colors.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 

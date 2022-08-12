@@ -70,7 +70,7 @@ class _AddAlarmView extends State<AddAlarmView> {
               bottomSeperator,
               UnconstrainedBox(
                 child: AppItemContainer(
-                  child: AlarmAttributeItemBody(
+                  child: AlarmDataItemBody(
                     icon: Icon(Icons.trending_up, color: AppColors.Malachite),
                     title: pAlarmData.currAlarmData.indicator?.type?.name,
                     itemType: 'indicator',
@@ -80,7 +80,7 @@ class _AddAlarmView extends State<AddAlarmView> {
               bottomSeperator,
               UnconstrainedBox(
                 child: AppItemContainer(
-                  child: AlarmAttributeItemBody(
+                  child: AlarmDataItemBody(
                     icon: Icon(Icons.calculate, color: AppColors.AmberSAE),
                     title: pAlarmData.currAlarmData.condition?.type ==
                             ConditionType.greater
@@ -93,7 +93,7 @@ class _AddAlarmView extends State<AddAlarmView> {
               bottomSeperator,
               UnconstrainedBox(
                 child: AppItemContainer(
-                  child: AlarmAttributeItemBody(
+                  child: AlarmDataItemBody(
                     icon: Icon(Icons.money, color: AppColors.Malachite),
                     title: pAlarmData.currAlarmData.targetPrice,
                     itemType: 'value',
@@ -103,7 +103,7 @@ class _AddAlarmView extends State<AddAlarmView> {
               bottomSeperator,
               UnconstrainedBox(
                 child: AppItemContainer(
-                  child: AlarmAttributeItemBody(
+                  child: AlarmDataItemBody(
                     icon: Icon(Icons.volume_up, color: AppColors.AmberSAE),
                     title: pAlarmData.currAlarmData.alert?.type?.name,
                     itemType: 'alert',

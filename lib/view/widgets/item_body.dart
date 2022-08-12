@@ -74,11 +74,11 @@ class CoinSearchItemBody extends StatelessWidget with ItemBody {
   }
 }
 
-class AlarmAttributeItemBody extends StatelessWidget with ItemBody {
+class AlarmDataItemBody extends StatelessWidget with ItemBody {
   final Icon? icon;
   final String? title;
   final String itemType;
-  const AlarmAttributeItemBody({
+  const AlarmDataItemBody({
     Key? key,
     this.icon,
     this.title,

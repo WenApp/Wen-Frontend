@@ -147,18 +147,11 @@ class _AddAlarmView extends State<AddAlarmView> {
         color: AppColors.EerieBlack,
         border: Border.all(color: AppColors.Malachite, width: 2.0),
         onTap: () async {
-          AlarmData alarmAttribute = AlarmData(
-            coin: pAlarmData.currAlarmData.coin,
-            currency: 'dollar',
-            targetPrice: pAlarmData.currAlarmData.targetPrice,
-            indicator: pAlarmData.currAlarmData.indicator,
-            condition: pAlarmData.currAlarmData.condition,
-            alert: pAlarmData.currAlarmData.alert,
-          );
-          if (!widget.edit) {
-            await _box.add(alarmAttribute);
+          if (widget.edit) {
+            await _box.putAt(
+                pAlarmData.selectedIndex, pAlarmData.currAlarmData);
           } else {
-            await _box.putAt(pAlarmData.selectedIndex, alarmAttribute);
+            await _box.add(pAlarmData.currAlarmData);
           }
           context.pop();
         },
